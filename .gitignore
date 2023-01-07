@@ -104,6 +104,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.venv/
 env/
 venv/
 ENV/
@@ -144,3 +145,20 @@ dmypy.json
 .history/
 
 .mypy_cache
+
+.git/*
+env/
+venv/
+.venv
+.venv/
+
+__pycache__/
+*.py[cod]
+
+.idea
+.DS_Store
+.AppleDouble
+.LSOverride
+
+*.sublime-project
+*.sublime-workspace 
