@@ -9,7 +9,7 @@ class InfoMessage:
     distance: float
     speed: float
     calories: float
-    message: str = ('Тип тренировки: {training_type}; '
+    Message: str = ('Тип тренировки: {training_type}; '
                     'Длительность: {duration:.3f} ч.; '
                     'Дистанция: {distance:.3f} км; '
                     'Ср. скорость: {speed:.3f} км/ч; '
@@ -17,7 +17,7 @@ class InfoMessage:
                     )
 
     def get_message(self) -> str:
-        return self.message.format(**asdict(self))
+        return self.Message.format(**asdict(self))
 
 
 class Training:
@@ -45,7 +45,7 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        pass
+        raise NotImplementedError('Метод не определён')
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -61,13 +61,6 @@ class Running(Training):
     """Тренировка: бег."""
     CALORIES_MEAN_SPEED_MULTIPLIER: int = 18
     CALORIES_MEAN_SPEED_SHIFT: float = 1.79
-
-    def __init__(self,
-                 action: int,
-                 duration: float,
-                 weight: float
-                 ) -> None:
-        super().__init__(action, duration, weight)
 
     def get_spent_calories(self) -> float:
         return ((self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
@@ -96,7 +89,7 @@ class SportsWalking(Training):
         duration_min: float = self.duration * self.MIN_IN_H
         height_m: float = self.height / self.CM_IN_M
         calories: float = ((self.CALORIES_WEIGHT_MULTIPLIER * self.weight
-                           + (speed_msec**2 / height_m)
+                           + (speed_msec ** 2 / height_m)
                            * self.CALORIES_SPEED_HEIGHT_MULTIPLIER
                            * self.weight) * duration_min)
         return calories
@@ -136,6 +129,8 @@ def read_package(workout_type: str, data: list) -> Training:
                      'RUN': Running,
                      'WLK': SportsWalking
                      }
+    if workout_type not in data_training:
+        raise ValueError('Несоответствующее значение ключа тренировки.')
     return data_training[workout_type](*data)
 
 
